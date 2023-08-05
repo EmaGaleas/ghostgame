@@ -147,7 +147,7 @@ public class GhostGame {
             int randomCol=posicionRandom(0, 5);
             if (matrizBotones[randomRow][randomCol] == null) {
                 int randomIndex = posicionRandom(0, piezasJugadorUno.size() - 1);
-                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorUno.get(randomIndex), "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasma.png", randomRow, randomCol);
+                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorUno.get(randomIndex), "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasmaJ1.png", randomRow, randomCol);
                 piezasJugadorUno.remove(randomIndex);
                 contJugador1++;
             }
