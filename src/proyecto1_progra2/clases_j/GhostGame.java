@@ -13,13 +13,12 @@ import java.util.Random;
 
 public class GhostGame {
     private Pieza[][] matrizBotones; //de JButton a Pieza por valores
-    private Pieza botonSeleccionado;
-    private String modo="ALEATORIO";
-    int dificultad=1;
-    int cantPiezas=2;
-    private Pieza piezaMover=null;
-    private int turno=1;
-
+    private Pieza botonSeleccionado;//obtener datos
+    private String modo="ALEATORIO";//por default INICIALIZAR O SI NO ERROR
+    int dificultad=1;//por default
+    int cantPiezas;
+    private Pieza piezaDestino;
+    private int turno=1;//siempre inicia 1
 
     public void GridLayout(JPanel tablero) {
         int filas = 6;
@@ -27,7 +26,7 @@ public class GhostGame {
         GridLayout gridLayout = new GridLayout(filas, col);
         tablero.setLayout(gridLayout);
         matrizBotones = new Pieza[filas][col];
-        posicionarPiezas();//si no ni carga
+        modo();//SEGUN EL MODO LLAMA LAS FUNCIONES DE POSICIONAR
             for (int i = 0; i < filas; i++) {
             for (int j = 0; j < col; j++) {
                 JButton button = new JButton();
@@ -43,9 +42,11 @@ public class GhostGame {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        piezaMover = matrizBotones[fila][columna]; // Establecer la pieza a mover
+                        botonSeleccionado = matrizBotones[fila][columna]; // Establecer la pieza a mover
                         turnos(fila, columna, button);
                         mostrarInformacionPieza(pieza);
+                        piezaDestino = matrizBotones[fila][columna]; // Establecer la pieza a mover
+
                     }
                 });
                 tablero.add(button);
@@ -56,97 +57,95 @@ public class GhostGame {
             }
         }
     }
+    //REVISAR OTRO TRUE
+//    private boolean noEsCastillo(int filaDestino, int columnaDestino) {
+//        if (piezaDestino != null) {
+//            String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
+//            if ("CASTILLO".equals(destino) ) {
+//                return false;
+//            }
+//        }
+//        return true; 
+//    }
+    //REVISAR
+private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
+    if (piezaDestino == null) {
+        // Si la casilla de destino está vacía (es null), el movimiento es válido
+        return true;
+    }
+    
+    String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
+    String jugadorDestino = matrizBotones[filaDestino][columnaDestino].getJugador();
+    
+    // Si el destino no es un "CASTILLO", o es una casilla ocupada por una pieza del otro jugador, el movimiento es válido
+    if (!"CASTILLO".equals(destino) && (("J1".equals(piezaDestino.getJugador()) && !"J1".equals(jugadorDestino))
+            || ("J2".equals(piezaDestino.getJugador()) && !"J2".equals(jugadorDestino)))) {
+        return true;
+    }
+    
+    // En cualquier otro caso, el movimiento no es válido
+    return false;
+}
 
-    private void mostrarInformacionPieza(Pieza pieza) {
-        if (pieza!=null) {
-            String info="Tipo "+pieza.getFantasma()+"\nJugador "+pieza.getJugador()+"\nF"+pieza.getFila()+"\nC"+pieza.getColumna();
-            JOptionPane.showMessageDialog(null, info, "Info", JOptionPane.INFORMATION_MESSAGE);
+    //REVISA
+private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
+    if (esMovimientoValido(nuevaFila, nuevaColumna)) {
+        if (nuevaFila == filaActual && ((nuevaColumna == columnaActual + 1) || (nuevaColumna == columnaActual - 1))) {
+            return true; // Movimiento hacia la izquierda o hacia la derecha
+        } else if (nuevaColumna == columnaActual && ((nuevaFila == filaActual + 1) || (nuevaFila == filaActual - 1))) {
+            return true; // Movimiento hacia arriba o hacia abajo
         }
     }
-    public void instrucciones(){
-        String reglas="COMO GANAR:\nF1-Capturar TODOS LOS BUENOS del oponente\nF2-Si te han capturado los MALOS\nF3-Si sacas un FANTASMA BUENO "
-                + "del castillo del oponente\nF4-Si tu oponente se rinde";
-        JOptionPane.showMessageDialog(null,reglas, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
-        String turno="TURNOS:\nEmpieza el jugador 1, es decir quien tiene las piezas con cinta roja y esta login seguido del jugador 2\nUn movimiento valido por jugador/turno";
-        JOptionPane.showMessageDialog(null,turno, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
-        if(modo.equals("ALEATORIO")){
-            JOptionPane.showMessageDialog(null,"MODO ALEATORIO\nNo sabras la identidad de tus piezas", "MODO", JOptionPane.INFORMATION_MESSAGE);
-        }else{
-            JOptionPane.showMessageDialog(null,"MODO MANUAL\nTu decides el orden de tus piezas", "MODO", JOptionPane.NO_OPTION);
-        }
-    }
-    private boolean noEsCastillo(int filaDestino, int columnaDestino) {
-        if (piezaMover != null) {
-            String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
-            if ("CASTILLO".equals(destino) && !"BUENOS".equals(destino) && !"MALOS".equals(destino)) {
-                return false;
-            }
-        }
-        return true; 
-    }
-
-
-    private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
-        if (piezaMover != null) {
-            if ("J1".equals(piezaMover.getJugador()) && noEsCastillo(filaDestino, columnaDestino)) {
-                return true;
-            } else if ("J2".equals(piezaMover.getJugador()) && noEsCastillo(filaDestino, columnaDestino)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-        if (esMovimientoValido(nuevaFila,nuevaColumna)&& noEsCastillo(nuevaFila,nuevaColumna)) {
-            if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
-                return true;
-            } else if (nuevaColumna == columnaActual &&((nuevaFila == filaActual+1)||(nuevaFila == filaActual-1))){
-                return true;
-            }else{
-                return false;
-            }
-        }
-        return false;
-    }
+    return false; // Movimiento no válido
+}
+    //REVISAR
     private boolean esMovimientoValidoJugador2(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-         if (esMovimientoValido(nuevaFila,nuevaColumna)&& noEsCastillo(nuevaFila,nuevaColumna)) {
+         if (esMovimientoValido(nuevaFila,nuevaColumna)) {
             if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
                 return true;
             } else if (nuevaColumna == columnaActual &&((nuevaFila == filaActual+1)||(nuevaFila == filaActual-1))){
                 return true;
-            }else{
-                return false;
             }
         }
         return false;
     }
-
+////REVISAR ESTO PRIMERAMENTE
+//    private void turnos(int fila, int columna, JButton button) {
+//        //OBTENER TODA LA INFORMACION DE LA PIEZA QUE HA SIDO SELECCIONADA, ES DECIR DE QUE JUGADOR ES,TIPO FANTASMA, COORDENADAS Y LA IMAGEPATH
+//
+//        //SI SE SELECCIONA OTRA DEL MISMO JUGADOR AHORA SE OIBTIENEN TODA LA INFORMACION DE ESA Y SE OLVIDA DE LA ANTERIOR EJ: YA NO QUEIRO MOVER LA DE ANTES AHORA QUIERO MOVER ESTA
+//        //A LA SELECCIONADA SE LE PONE FONDO NEGRO
+//        if (turno == 1) {//USA LA SPIEZAS QUE DICEN J1 EN GET.JUGADOR
+//        //PODRA MOVER SI LA PIEZADESTINO ESTA VACIA O SI LA PIEZADESTINO ES DEL JUGADOR CONTRARIO(EL CASTILLO NUNCA SE VA APODER MOVER)
+//        //SI CUMPLE SE LE VAN A TRASLADAR LOS DATOS DE ESA PIEZASELECCIONADA A LA DE DESTINO Y EL BACJKFROUND SERA BLANCO Y TURNO PARA EL JUGADOR 2
+//    } else if (turno == 2) {//USA LA SPIEZAS QUE DICEN J2 EN GET.JUGADOR
+//    
+//    }
+//           
+//        
+//    }
     private void turnos(int fila, int columna, JButton button) {
-    if (turno == 1) {
-        if (piezaMover != null && "J1".equals(piezaMover.getJugador())) {
-            if (esMovimientoValidoJugador1(fila, columna, piezaMover.getFila(), piezaMover.getColumna())) {
-                button.setBackground(Color.BLACK);
-                turno = 2;
-            } else {
-                JOptionPane.showMessageDialog(null, "Movimiento invalido para el jugador 1", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
+    botonSeleccionado= matrizBotones[fila][columna];
+    botonSeleccionado.setBackground(Color.BLACK);
+
+    if (turno == 1) { 
+        if (esMovimientoValidoJugador1(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
+           //traslada los datos de botonSeleccionado a piezaDestino si cumple
+            turno = 2;
+        }else{
+            //jotion que diga mobimiento no valido
         }
-    } else if (turno == 2) {
-            if (piezaMover != null && "J2".equals(piezaMover.getJugador())) {
-                if (esMovimientoValidoJugador2(fila, columna, piezaMover.getFila(), piezaMover.getColumna())) {
-                    button.setBackground(Color.BLACK);
-                    turno = 1;
-                } else {
-                    JOptionPane.showMessageDialog(null, "Movimiento invalido para el jugador 2", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+    } else if (turno == 2) { // Turno del jugador 2
+        if (esMovimientoValidoJugador2(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
+                       //traslada los datos de botonSeleccionado a piezaDestino
+
+            turno = 1;
+        }else{
+            //jotion que diga mobimiento no valido
         }
-        button.setBackground(Color.WHITE);
     }
+}
+
 
 /*
     private void siMuevePeroNoTraslada(int fila, int columna, JButton button) {
@@ -185,12 +184,22 @@ public class GhostGame {
 
         }
     }
-*/
-/*
-
-    
-    
-    public int difi(double dificultad){
+*/ 
+    public void modo(){
+        switch(modo){
+            case "ALEATORIO":
+                posicionarPiezas();
+                break;
+            case "MANUAL":
+                System.out.println("none");
+                break;
+            default:
+                modo="ALEATORIO";
+                posicionarPiezas();
+                break;
+        }
+    }
+    public int difi(){
        switch (dificultad){
             case 1:
                 cantPiezas=2;
@@ -204,13 +213,14 @@ public class GhostGame {
             default:
                 cantPiezas=8;
         }
+       return cantPiezas;
     }
     
-    */
     private int posicionRandom(int min, int max) {
         Random random=new Random();
         return random.nextInt(max-min+1)+min;
     }
+    //pendiente lo de fantasmas
     public void posicionarPiezas() {
         ArrayList<String> piezasJugadorUno = new ArrayList<>();
         ArrayList<String> piezasJugadorDos = new ArrayList<>();
@@ -227,7 +237,7 @@ public class GhostGame {
         matrizBotones[5][5] = new Pieza("CASTILLO", "J1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 5);
          //jugador 1 f 4 y 5
         int contJugador1 = 0;
-        while (contJugador1<cantPiezas){//p<3, entonces es 6, p<2 entonces es 4, p<4 entonces 8
+        while (contJugador1<difi()){//p<3, entonces es 6, p<2 entonces es 4, p<4 entonces 8
             int randomRow=posicionRandom(4, 5);
             int randomCol=posicionRandom(0, 5);
             if (matrizBotones[randomRow][randomCol] == null) {
@@ -248,6 +258,26 @@ public class GhostGame {
                 piezasJugadorDos.remove(randomIndex);
                 contJugador2++;
             }
+        }
+    }
+    //informativos
+    private void mostrarInformacionPieza(Pieza pieza) {
+        if (pieza!=null) {
+            String info="Tipo "+pieza.getFantasma()+"\nJugador "+pieza.getJugador()+"\nF"+pieza.getFila()+"\nC"+pieza.getColumna();
+            JOptionPane.showMessageDialog(null, info, "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    //informativo
+    public void instrucciones(){
+        String reglas="COMO GANAR:\nF1-Capturar TODOS LOS BUENOS del oponente\nF2-Si te han capturado los MALOS\nF3-Si sacas un FANTASMA BUENO "
+                + "del castillo del oponente\nF4-Si tu oponente se rinde";
+        JOptionPane.showMessageDialog(null,reglas, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
+        String turno="TURNOS:\nEmpieza el jugador 1, es decir quien tiene las piezas con cinta roja y esta login seguido del jugador 2\nUn movimiento valido por jugador/turno";
+        JOptionPane.showMessageDialog(null,turno, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
+        if(modo.equals("ALEATORIO")){
+            JOptionPane.showMessageDialog(null,"MODO ALEATORIO\nNo sabras la identidad de tus piezas", "MODO", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null,"MODO MANUAL\nTu decides el orden de tus piezas", "MODO", JOptionPane.NO_OPTION);
         }
     }
 } 
