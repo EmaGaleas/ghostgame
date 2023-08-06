@@ -169,9 +169,7 @@ public class GhostGame {
     }
 */
 /*
-    private boolean busquedaVacio(int row, int col) {
-        return matrizBotones[row][col].getFantasma().length() > 0;
-    }
+
     
     
     public int modo(double modo){
@@ -196,8 +194,6 @@ public class GhostGame {
         return random.nextInt(max-min+1)+min;
     }
     public void posicionarPiezas() {
-//        int filas = matrizBotones.length;
-//        int col = matrizBotones[0].length;
         ArrayList<String> piezasJugadorUno = new ArrayList<>();
         ArrayList<String> piezasJugadorDos = new ArrayList<>();
         for (int p = 0; p < modo; p++) {//cuantos en array, <2 es 4, <3 es 6 <4 es 8
