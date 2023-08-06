@@ -17,6 +17,7 @@ public class GhostGame {
     int modo=1;
     int cantPiezas=2;
     private Pieza piezaMover=null;
+    private int turno=1;
 
 
     public void GridLayout(JPanel tablero) {
@@ -41,6 +42,7 @@ public class GhostGame {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
+                        piezaMover = matrizBotones[fila][columna]; // Establecer la pieza a mover
                         mover(fila, columna, button);
                     }
                 });
@@ -59,6 +61,76 @@ public class GhostGame {
             JOptionPane.showMessageDialog(null, info, "Info", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+    private boolean noEsCastillo(int filaDestino, int columnaDestino) {
+        if (piezaMover != null) {
+            String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
+            if ("CASTILLO".equals(destino) && !"BUENOS".equals(destino) && !"MALOS".equals(destino)) {
+                return false;
+            }
+        }
+        return true; 
+    }
+
+
+    private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
+        if (piezaMover != null) {
+            if ("J1".equals(piezaMover.getJugador()) && noEsCastillo(filaDestino, columnaDestino)) {
+                return true;
+            } else if ("J2".equals(piezaMover.getJugador()) && noEsCastillo(filaDestino, columnaDestino)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
+        if (esMovimientoValido(nuevaFila,nuevaColumna)&& noEsCastillo(nuevaFila,nuevaColumna)) {
+            if ((nuevaFila == filaActual + 1 || nuevaFila == filaActual - 1) && (nuevaColumna == columnaActual+1||nuevaColumna == columnaActual-1)) {
+                return true;
+            } else{
+                return false;
+            }
+        }
+        return false;
+    }
+    private boolean esMovimientoValidoJugador2(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
+        if (esMovimientoValido(nuevaFila,nuevaColumna) && noEsCastillo(nuevaFila,nuevaColumna)) {
+            if ((nuevaFila == filaActual + 1 || nuevaFila == filaActual - 1) && (nuevaColumna == columnaActual+1||nuevaColumna == columnaActual-1)) {
+                return true;
+            } else{
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private void mover(int fila, int columna, JButton button) {
+    if (turno == 1) {
+        if (piezaMover != null && "J1".equals(piezaMover.getJugador())) {
+            if (esMovimientoValidoJugador1(fila, columna, piezaMover.getFila(), piezaMover.getColumna())) {
+                button.setBackground(Color.BLACK);
+                turno = 2;
+            } else {
+                JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 1", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    } else if (turno == 2) {
+            if (piezaMover != null && "J2".equals(piezaMover.getJugador())) {
+                if (esMovimientoValido(fila, columna)) {
+                    button.setBackground(Color.BLACK);
+                    turno = 1;
+                } else {
+                    JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 2", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        button.setBackground(Color.WHITE);
+    }
+
+/*
     private void mover(int fila, int columna, JButton button) {
         mostrarInformacionPieza(matrizBotones[fila][columna]);
         button.setBackground(Color.BLACK);
@@ -95,12 +167,7 @@ public class GhostGame {
 
         }
     }
-
-    
-    private int posicionRandom(int min, int max) {
-        Random random=new Random();
-        return random.nextInt(max-min+1)+min;
-    }
+*/
 /*
     private boolean busquedaVacio(int row, int col) {
         return matrizBotones[row][col].getFantasma().length() > 0;
@@ -124,6 +191,10 @@ public class GhostGame {
     }
     
     */
+    private int posicionRandom(int min, int max) {
+        Random random=new Random();
+        return random.nextInt(max-min+1)+min;
+    }
     public void posicionarPiezas() {
 //        int filas = matrizBotones.length;
 //        int col = matrizBotones[0].length;
@@ -136,10 +207,10 @@ public class GhostGame {
             piezasJugadorDos.add("MALOS");
         }
         //castillos FIJO
-        matrizBotones[0][0] = new Pieza("CASTILLO", "JUGADOR2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 0, 0);
-        matrizBotones[0][5] = new Pieza("CASTILLO", "JUGADOR2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 0, 5);
-        matrizBotones[5][0] = new Pieza("CASTILLO", "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 0);
-        matrizBotones[5][5] = new Pieza("CASTILLO", "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 5);
+        matrizBotones[0][0] = new Pieza("CASTILLO", "J2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 0, 0);
+        matrizBotones[0][5] = new Pieza("CASTILLO", "J2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 0, 5);
+        matrizBotones[5][0] = new Pieza("CASTILLO", "J1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 0);
+        matrizBotones[5][5] = new Pieza("CASTILLO", "J1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 5);
          //jugador 1 f 4 y 5
         int contJugador1 = 0;
         while (contJugador1<cantPiezas){//p<3, entonces es 6, p<2 entonces es 4, p<4 entonces 8
@@ -147,7 +218,7 @@ public class GhostGame {
             int randomCol=posicionRandom(0, 5);
             if (matrizBotones[randomRow][randomCol] == null) {
                 int randomIndex = posicionRandom(0, piezasJugadorUno.size() - 1);
-                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorUno.get(randomIndex), "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasmaJ1.png", randomRow, randomCol);
+                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorUno.get(randomIndex), "J1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasmaJ1.png", randomRow, randomCol);
                 piezasJugadorUno.remove(randomIndex);
                 contJugador1++;
             }
@@ -159,89 +230,10 @@ public class GhostGame {
             int randomCol = posicionRandom(0, 5);
             if (matrizBotones[randomRow][randomCol] == null) {
                 int randomIndex = posicionRandom(0, piezasJugadorDos.size() - 1);
-                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorDos.get(randomIndex), "JUGADOR2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasma.png", randomRow, randomCol);
+                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorDos.get(randomIndex), "J2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasma.png", randomRow, randomCol);
                 piezasJugadorDos.remove(randomIndex);
                 contJugador2++;
             }
         }
     }
-}/*
-public void posicionarPiezas() {
-        int filas = matrizBotones.length;
-        int col = matrizBotones[0].length;
-
-        ArrayList<String> piezasJugadorUno = new ArrayList<>();
-        ArrayList<String> piezasJugadorDos = new ArrayList<>();
-        for (int p = 0; p < 1; p++) {//AQUI ASIGNA CUANTOS EN EL ARRAY, EJ CON 1 SON 2 PIEZAS C/JUGADOR, 2 SON 4 Y 4 SON 8
-            piezasJugadorUno.add("BUENOS");
-            piezasJugadorUno.add("MALOS");
-            piezasJugadorDos.add("BUENOS");
-            piezasJugadorDos.add("MALOS");
-        }
-
-        // Posicionar los castillos FIJO
-        matrizBotones[0][0] = new Pieza("CASTILLO", "JUGADOR2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 0, 0);
-        matrizBotones[0][5] = new Pieza("CASTILLO", "JUGADOR2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 0, 5);
-        matrizBotones[5][0] = new Pieza("CASTILLO", "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 0);
-        matrizBotones[5][5] = new Pieza("CASTILLO", "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg", 5, 5);
-
-         //jugador 1 f 4 y 5
-        int countJugador1 = 0;
-        while (countJugador1 < 2) {
-            int randomRow = posicionRandom(4, 5);
-            int randomCol = posicionRandom(1, col - 2);
-            if (matrizBotones[randomRow][randomCol] == null) {
-                int randomIndex = posicionRandom(0, piezasJugadorUno.size() - 1);
-                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorUno.get(randomIndex), "JUGADOR1", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasma.png", randomRow, randomCol);
-                piezasJugadorUno.remove(randomIndex);
-                countJugador1++;
-            }
-        }
-
-        //jugador 2 f 0 y 1
-         int countJugador2 = 0;
-        while (countJugador1 < 2) {
-            int randomRow = posicionRandom(0, 1);
-            int randomCol = posicionRandom(1, col - 2);
-            if (matrizBotones[randomRow][randomCol] == null) {
-                int randomIndex = posicionRandom(0, piezasJugadorUno.size() - 1);
-                matrizBotones[randomRow][randomCol] = new Pieza(piezasJugadorDos.get(randomIndex), "JUGADOR2", "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasma.png", randomRow, randomCol);
-                piezasJugadorDos.remove(randomIndex);
-                countJugador2++;
-            }
-        }
-    /*
-/*
-    public void GridLayout(JPanel tablero) {
-        int filas = 6;
-        int col = 6;
-        GridLayout gridLayout = new GridLayout(filas, col);
-        tablero.setLayout(gridLayout);
-
-        matrizBotones = new JButton[filas][col];
-
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < col; j++) {
-                JButton button = new JButton();
-                button.setPreferredSize(new Dimension(50, 100));
-                matrizBotones[i][j] = button;
-                tablero.add(button);
-
-                if (j == 0 && i != 0 && i != filas - 1 || j== col- 1 && i != 0 && i != filas - 1) {
-                    button.setEnabled(false);
-                } else if ((i == 0 && j == 0) || (i == 0 && j == col- 1) || (i == filas - 1 && j == 0) || (i == filas - 1 && j == col- 1)) {
-                    String imagePath = "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\castillo.jpg";
-                    ImageIcon icon = new ImageIcon(imagePath);
-                    button.setIcon(icon);
-                } else {
-                    String imagePath = "C:\\Users\\pcast\\OneDrive\\Documentos\\NetBeansProjects\\New Folder\\proyecto1_progra2\\src\\imagenes\\juego\\fantasma.png";
-                    ImageIcon icon = new ImageIcon(imagePath);
-                    button.setIcon(icon);
-                }
-                button.setBackground(new Color(0xFFFFFF));
-            }
-        }
-    }
-*/
-
-
+} 

@@ -4,15 +4,22 @@
  */
 package proyecto1_progra2;
 
+import javax.swing.JOptionPane;
 import proyecto1_progra2.clases_j.*;
 
-public class tablero extends javax.swing.JFrame {
 
+public class tablero extends javax.swing.JFrame {
 
     public tablero() {
         initComponents();
         GhostGame ghostGame = new GhostGame();
         ghostGame.GridLayout(tablero);
+        String reglas="COMO GANAR:\nF1-Capturar TODOS LOS BUENOS del oponente\nF2-Si te han capturado los MALOS\nF3-Si sacas un FANTASMA BUENO "
+                + "del castillo del oponente\nF4-Si tu oponente se rinde";
+        JOptionPane.showMessageDialog(null,reglas, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
+        String turno="TURNOS:\nEmpieza el jugador 1, es decir quien tiene las piezas con cinta roja y esta login seguido del jugador 2\nUn movimiento valido por jugador/turno";
+        JOptionPane.showMessageDialog(null,turno, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
+
         //ghostGame.posicionarPiezas();
     }
 
