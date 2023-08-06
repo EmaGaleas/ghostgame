@@ -14,7 +14,8 @@ import java.util.Random;
 public class GhostGame {
     private Pieza[][] matrizBotones; //de JButton a Pieza por valores
     private JButton botonSeleccionado;
-    int modo=1;
+    private String modo="ALEATORIO";
+    int dificultad=1;
     int cantPiezas=2;
     private Pieza piezaMover=null;
     private int turno=1;
@@ -43,7 +44,8 @@ public class GhostGame {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         piezaMover = matrizBotones[fila][columna]; // Establecer la pieza a mover
-                        mover(fila, columna, button);
+                        turnos(fila, columna, button);
+                        mostrarInformacionPieza(pieza);
                     }
                 });
                 tablero.add(button);
@@ -59,6 +61,18 @@ public class GhostGame {
         if (pieza!=null) {
             String info="Tipo "+pieza.getFantasma()+"\nJugador "+pieza.getJugador()+"\nF"+pieza.getFila()+"\nC"+pieza.getColumna();
             JOptionPane.showMessageDialog(null, info, "Info", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    public void instrucciones(){
+        String reglas="COMO GANAR:\nF1-Capturar TODOS LOS BUENOS del oponente\nF2-Si te han capturado los MALOS\nF3-Si sacas un FANTASMA BUENO "
+                + "del castillo del oponente\nF4-Si tu oponente se rinde";
+        JOptionPane.showMessageDialog(null,reglas, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
+        String turno="TURNOS:\nEmpieza el jugador 1, es decir quien tiene las piezas con cinta roja y esta login seguido del jugador 2\nUn movimiento valido por jugador/turno";
+        JOptionPane.showMessageDialog(null,turno, "REGLAS", JOptionPane.INFORMATION_MESSAGE);
+        if(modo.equals("ALEATORIO")){
+            JOptionPane.showMessageDialog(null,"MODO ALEATORIO\nNo sabras la identidad de tus piezas", "MODO", JOptionPane.INFORMATION_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null,"MODO MANUAL\nTu decides el orden de tus piezas", "MODO", JOptionPane.NO_OPTION);
         }
     }
     private boolean noEsCastillo(int filaDestino, int columnaDestino) {
@@ -84,44 +98,48 @@ public class GhostGame {
     }
     private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
         if (esMovimientoValido(nuevaFila,nuevaColumna)&& noEsCastillo(nuevaFila,nuevaColumna)) {
-            if ((nuevaFila == filaActual + 1 || nuevaFila == filaActual - 1) && (nuevaColumna == columnaActual+1||nuevaColumna == columnaActual-1)) {
+            if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
                 return true;
-            } else{
+            } else if (nuevaColumna == columnaActual &&((nuevaFila == filaActual+1)||(nuevaFila == filaActual-1))){
+                return true;
+            }else{
                 return false;
             }
         }
         return false;
     }
     private boolean esMovimientoValidoJugador2(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-        if (esMovimientoValido(nuevaFila,nuevaColumna) && noEsCastillo(nuevaFila,nuevaColumna)) {
-            if ((nuevaFila == filaActual + 1 || nuevaFila == filaActual - 1) && (nuevaColumna == columnaActual+1||nuevaColumna == columnaActual-1)) {
+         if (esMovimientoValido(nuevaFila,nuevaColumna)&& noEsCastillo(nuevaFila,nuevaColumna)) {
+            if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
                 return true;
-            } else{
+            } else if (nuevaColumna == columnaActual &&((nuevaFila == filaActual+1)||(nuevaFila == filaActual-1))){
+                return true;
+            }else{
                 return false;
             }
         }
         return false;
     }
 
-    private void mover(int fila, int columna, JButton button) {
+    private void turnos(int fila, int columna, JButton button) {
     if (turno == 1) {
         if (piezaMover != null && "J1".equals(piezaMover.getJugador())) {
             if (esMovimientoValidoJugador1(fila, columna, piezaMover.getFila(), piezaMover.getColumna())) {
                 button.setBackground(Color.BLACK);
                 turno = 2;
             } else {
-                JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 1", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Movimiento invalido para el jugador 1", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
         }
     } else if (turno == 2) {
             if (piezaMover != null && "J2".equals(piezaMover.getJugador())) {
-                if (esMovimientoValido(fila, columna)) {
+                if (esMovimientoValidoJugador2(fila, columna, piezaMover.getFila(), piezaMover.getColumna())) {
                     button.setBackground(Color.BLACK);
                     turno = 1;
                 } else {
-                    JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 2", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Movimiento invalido para el jugador 2", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
@@ -131,7 +149,7 @@ public class GhostGame {
     }
 
 /*
-    private void mover(int fila, int columna, JButton button) {
+    private void siMuevePeroNoTraslada(int fila, int columna, JButton button) {
         mostrarInformacionPieza(matrizBotones[fila][columna]);
         button.setBackground(Color.BLACK);
         if (piezaMover == null) {
@@ -172,8 +190,8 @@ public class GhostGame {
 
     
     
-    public int modo(double modo){
-       switch (modo){
+    public int difi(double dificultad){
+       switch (dificultad){
             case 1:
                 cantPiezas=2;
                 break;
@@ -196,7 +214,7 @@ public class GhostGame {
     public void posicionarPiezas() {
         ArrayList<String> piezasJugadorUno = new ArrayList<>();
         ArrayList<String> piezasJugadorDos = new ArrayList<>();
-        for (int p = 0; p < modo; p++) {//cuantos en array, <2 es 4, <3 es 6 <4 es 8
+        for (int p = 0; p < dificultad; p++) {//cuantos en array, <2 es 4, <3 es 6 <4 es 8
             piezasJugadorUno.add("BUENOS");
             piezasJugadorUno.add("MALOS");
             piezasJugadorDos.add("BUENOS");
