@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class GhostGame {
     private Pieza[][] matrizBotones; //de JButton a Pieza por valores
-    private JButton botonSeleccionado;
+    private Pieza botonSeleccionado;
     private String modo="ALEATORIO";
     int dificultad=1;
     int cantPiezas=2;
