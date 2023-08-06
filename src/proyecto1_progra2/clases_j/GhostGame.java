@@ -68,37 +68,31 @@ public class GhostGame {
 //        return true; 
 //    }
     //REVISAR
-private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
-    if (piezaDestino == null) {
-        // Si la casilla de destino está vacía (es null), el movimiento es válido
-        return true;
-    }
-    
-    String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
-    String jugadorDestino = matrizBotones[filaDestino][columnaDestino].getJugador();
-    
-    // Si el destino no es un "CASTILLO", o es una casilla ocupada por una pieza del otro jugador, el movimiento es válido
-    if (!"CASTILLO".equals(destino) && (("J1".equals(piezaDestino.getJugador()) && !"J1".equals(jugadorDestino))
-            || ("J2".equals(piezaDestino.getJugador()) && !"J2".equals(jugadorDestino)))) {
-        return true;
-    }
-    
-    // En cualquier otro caso, el movimiento no es válido
-    return false;
-}
-
-    //REVISA
-private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-    if (esMovimientoValido(nuevaFila, nuevaColumna)) {
-        if (nuevaFila == filaActual && ((nuevaColumna == columnaActual + 1) || (nuevaColumna == columnaActual - 1))) {
-            return true; // Movimiento hacia la izquierda o hacia la derecha
-        } else if (nuevaColumna == columnaActual && ((nuevaFila == filaActual + 1) || (nuevaFila == filaActual - 1))) {
-            return true; // Movimiento hacia arriba o hacia abajo
+    private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
+        if (piezaDestino == null) {
+            return true;
         }
+
+        String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
+        String jugadorDestino = matrizBotones[filaDestino][columnaDestino].getJugador();
+
+        if (!"CASTILLO".equals(destino) && (("J1".equals(piezaDestino.getJugador()) && !"J1".equals(jugadorDestino))
+                || ("J2".equals(piezaDestino.getJugador()) && !"J2".equals(jugadorDestino)))) {
+            return true;
+        }
+
+        return false;
     }
-    return false; // Movimiento no válido
-}
-    //REVISAR
+    private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
+        if (esMovimientoValido(nuevaFila, nuevaColumna)) {
+            if (nuevaFila == filaActual && ((nuevaColumna == columnaActual + 1) || (nuevaColumna == columnaActual - 1))) {
+                return true; // Movimiento hacia la izquierda o hacia la derecha
+            } else if (nuevaColumna == columnaActual && ((nuevaFila == filaActual + 1) || (nuevaFila == filaActual - 1))) {
+                return true; // Movimiento hacia arriba o hacia abajo
+            }
+        }
+        return false; // Movimiento no válido
+    }
     private boolean esMovimientoValidoJugador2(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
          if (esMovimientoValido(nuevaFila,nuevaColumna)) {
             if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
@@ -108,43 +102,41 @@ private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int 
             }
         }
         return false;
-    }
-////REVISAR ESTO PRIMERAMENTE
-//    private void turnos(int fila, int columna, JButton button) {
-//        //OBTENER TODA LA INFORMACION DE LA PIEZA QUE HA SIDO SELECCIONADA, ES DECIR DE QUE JUGADOR ES,TIPO FANTASMA, COORDENADAS Y LA IMAGEPATH
-//
-//        //SI SE SELECCIONA OTRA DEL MISMO JUGADOR AHORA SE OIBTIENEN TODA LA INFORMACION DE ESA Y SE OLVIDA DE LA ANTERIOR EJ: YA NO QUEIRO MOVER LA DE ANTES AHORA QUIERO MOVER ESTA
-//        //A LA SELECCIONADA SE LE PONE FONDO NEGRO
-//        if (turno == 1) {//USA LA SPIEZAS QUE DICEN J1 EN GET.JUGADOR
-//        //PODRA MOVER SI LA PIEZADESTINO ESTA VACIA O SI LA PIEZADESTINO ES DEL JUGADOR CONTRARIO(EL CASTILLO NUNCA SE VA APODER MOVER)
-//        //SI CUMPLE SE LE VAN A TRASLADAR LOS DATOS DE ESA PIEZASELECCIONADA A LA DE DESTINO Y EL BACJKFROUND SERA BLANCO Y TURNO PARA EL JUGADOR 2
-//    } else if (turno == 2) {//USA LA SPIEZAS QUE DICEN J2 EN GET.JUGADOR
-//    
-//    }
-//           
-//        
-//    }
-    private void turnos(int fila, int columna, JButton button) {
-    botonSeleccionado= matrizBotones[fila][columna];
-    botonSeleccionado.setBackground(Color.BLACK);
+    } 
+     private void turnos(int fila, int columna, JButton button) {
+        if (turno == 1) {
+            if(botonSeleccionado==null){
+                if (botonSeleccionado != null && "J1".equals(botonSeleccionado.getJugador())) {
+                    if (esMovimientoValidoJugador1(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
+                        button.setBackground(Color.BLACK);
+                        turno = 2;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 1", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
 
-    if (turno == 1) { 
-        if (esMovimientoValidoJugador1(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
-           //traslada los datos de botonSeleccionado a piezaDestino si cumple
-            turno = 2;
-        }else{
-            //jotion que diga mobimiento no valido
-        }
-    } else if (turno == 2) { // Turno del jugador 2
-        if (esMovimientoValidoJugador2(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
-                       //traslada los datos de botonSeleccionado a piezaDestino
+            } else {
+                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } else if (turno == 2) {
+            if(botonSeleccionado==null){
+                if (botonSeleccionado != null && "J2".equals(botonSeleccionado.getJugador())) {
+                    if (esMovimientoValidoJugador2(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
+                        button.setBackground(Color.BLACK);
+                        turno = 2;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 2", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
 
-            turno = 1;
-        }else{
-            //jotion que diga mobimiento no valido
+            } else {
+                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            button.setBackground(Color.WHITE);
         }
-    }
-}
+     }
 
 
 /*
