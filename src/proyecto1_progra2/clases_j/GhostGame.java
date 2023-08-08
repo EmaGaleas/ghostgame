@@ -42,10 +42,7 @@ public class GhostGame {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        botonSeleccionado = matrizBotones[fila][columna]; // Establecer la pieza a mover
-                        turnos(fila, columna, button);
-                        mostrarInformacionPieza(pieza);
-                        piezaDestino = matrizBotones[fila][columna]; // Establecer la pieza a mover
+   
 
                     }
                 });
@@ -53,7 +50,7 @@ public class GhostGame {
             // if(j==0 && (i==0 && i==5) || j==5 && (i==0 && i==5)){
                //    button.setEnabled(false);
                //}
-                button.setBackground(new Color(0xFFFFFF));
+                button.setBackground(Color.lightGray);
             }
         }
     }
@@ -81,6 +78,7 @@ public class GhostGame {
             return true;
         }
 
+        // En cualquier otro caso, el movimiento no es válido
         return false;
     }
     private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
@@ -180,14 +178,14 @@ public class GhostGame {
     public void modo(){
         switch(modo){
             case "ALEATORIO":
-                posicionarPiezas();
+                posicionarPiezasAleatorio();
                 break;
             case "MANUAL":
                 System.out.println("none");
                 break;
             default:
                 modo="ALEATORIO";
-                posicionarPiezas();
+                posicionarPiezasAleatorio();
                 break;
         }
     }
@@ -213,7 +211,7 @@ public class GhostGame {
         return random.nextInt(max-min+1)+min;
     }
     //pendiente lo de fantasmas
-    public void posicionarPiezas() {
+    public void posicionarPiezasAleatorio() {
         ArrayList<String> piezasJugadorUno = new ArrayList<>();
         ArrayList<String> piezasJugadorDos = new ArrayList<>();
         for (int p = 0; p < dificultad; p++) {//cuantos en array, <2 es 4, <3 es 6 <4 es 8
