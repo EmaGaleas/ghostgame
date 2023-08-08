@@ -9,10 +9,11 @@ import proyecto1_progra2.clases_j.*;
 
 
 public class tablero extends javax.swing.JFrame {
-
+    
+private GhostGame ghostGame;
     public tablero() {
         initComponents();
-        GhostGame ghostGame = new GhostGame();
+         ghostGame = new GhostGame(); 
         ghostGame.GridLayout(tablero);
         filaDestino.setEnabled(false);
         columnaDestino.setEnabled(false);
@@ -586,7 +587,9 @@ public class tablero extends javax.swing.JFrame {
     }//GEN-LAST:event_infoMouseClicked
 
     private void getMoverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_getMoverMouseClicked
-      String fSeleccion= filaSeleccion.getText().trim();
+
+        
+        String fSeleccion= filaSeleccion.getText().trim();
       String cSeleccion= columnaSeleccion.getText().trim();
       if (fSeleccion.isEmpty()||cSeleccion.isEmpty()){
           JOptionPane.showMessageDialog(null, "Llene las casillas", "Error", JOptionPane.WARNING_MESSAGE);

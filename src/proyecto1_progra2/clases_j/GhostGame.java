@@ -12,14 +12,21 @@ import java.util.ArrayList;
 import java.util.Random; 
 
 public class GhostGame {
-    private Pieza[][] matrizBotones; //de JButton a Pieza por valores
+    //atrubutos mover pieza
+    private Pieza piezaDestino;
     private Pieza botonSeleccionado;//obtener datos
+    private int turno=1;//siempre inicia 1
+    
+    //atributos para inicializar tablero
+    public Pieza[][] matrizBotones; //de JButton a Pieza por valores
     private String modo="ALEATORIO";//por default INICIALIZAR O SI NO ERROR
     int dificultad=1;//por default
-    int cantPiezas;
-    private Pieza piezaDestino;
-    private int turno=1;//siempre inicia 1
-
+    int cantPiezas;//dependiente de dificultad 
+    
+    //atributos sobre piezas de jugador
+    private ArrayList<String> piezasJugadorUno = new ArrayList<>();
+    private ArrayList<String> piezasJugadorDos = new ArrayList<>();
+    
     public void GridLayout(JPanel tablero) {
         int filas = 6;
         int col = 6;
@@ -37,8 +44,6 @@ public class GhostGame {
                     ImageIcon icon = new ImageIcon(pieza.getImagePath());
                     button.setIcon(icon);
                 }
-                final int fila = i; // final o error en actionlistener
-                final int columna = j;
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -47,14 +52,34 @@ public class GhostGame {
                     }
                 });
                 tablero.add(button);
-            // if(j==0 && (i==0 && i==5) || j==5 && (i==0 && i==5)){
-               //    button.setEnabled(false);
-               //}
                 button.setBackground(Color.lightGray);
             }
         }
     }
-    //REVISAR OTRO TRUE
+
+    public boolean datosIngresados(Pieza piezaSeleccionada) {
+        if (piezaSeleccionada != null) {
+            botonSeleccionado = piezaSeleccionada;
+            if(botonSeleccionado.getJugador().equals("J1")&&turno==1){
+                return true;
+                //piezaSeleccionada.setBackground(Color.red);
+               // JOptionPane.showMessageDialog(null, "movimiento valido", "Info", JOptionPane.INFORMATION_MESSAGE);
+               // turno=2;
+            }else if(botonSeleccionado.getJugador().equals("J1")&&turno==2){
+                JOptionPane.showMessageDialog(null, "no", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }else if(botonSeleccionado.getJugador().equals("J2")&&turno==2){
+                piezaSeleccionada.setBackground(Color.red);
+                JOptionPane.showMessageDialog(null, "movimiento valido", "Info", JOptionPane.INFORMATION_MESSAGE);
+                turno=1;
+            }else if(botonSeleccionado.getJugador().equals("J2")&&turno==1){
+                JOptionPane.showMessageDialog(null, "no", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "ERROR", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    return false;
+}
+        //REVISAR OTRO TRUE
 //    private boolean noEsCastillo(int filaDestino, int columnaDestino) {
 //        if (piezaDestino != null) {
 //            String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
@@ -65,77 +90,38 @@ public class GhostGame {
 //        return true; 
 //    }
     //REVISAR
-    private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
-        if (piezaDestino == null) {
-            return true;
-        }
-
-        String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
-        String jugadorDestino = matrizBotones[filaDestino][columnaDestino].getJugador();
-
-        if (!"CASTILLO".equals(destino) && (("J1".equals(piezaDestino.getJugador()) && !"J1".equals(jugadorDestino))
-                || ("J2".equals(piezaDestino.getJugador()) && !"J2".equals(jugadorDestino)))) {
-            return true;
-        }
-
-        // En cualquier otro caso, el movimiento no es válido
-        return false;
-    }
+//    private boolean esMovimientoValido(int filaDestino, int columnaDestino) {
+//        if (piezaDestino == null) {
+//            return true;
+//        }
+//
+//        String destino = matrizBotones[filaDestino][columnaDestino].getFantasma();
+//        String jugadorDestino = matrizBotones[filaDestino][columnaDestino].getJugador();
+//
+//        if (!"CASTILLO".equals(destino) && (("J1".equals(piezaDestino.getJugador()) && !"J1".equals(jugadorDestino))
+//                || ("J2".equals(piezaDestino.getJugador()) && !"J2".equals(jugadorDestino)))) {
+//            return false;
+//        }
+//
+//        return false;
+//    }
     private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-        if (esMovimientoValido(nuevaFila, nuevaColumna)) {
             if (nuevaFila == filaActual && ((nuevaColumna == columnaActual + 1) || (nuevaColumna == columnaActual - 1))) {
                 return true; // Movimiento hacia la izquierda o hacia la derecha
             } else if (nuevaColumna == columnaActual && ((nuevaFila == filaActual + 1) || (nuevaFila == filaActual - 1))) {
                 return true; // Movimiento hacia arriba o hacia abajo
+            
             }
-        }
         return false; // Movimiento no válido
     }
     private boolean esMovimientoValidoJugador2(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-         if (esMovimientoValido(nuevaFila,nuevaColumna)) {
             if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
                 return true;
             } else if (nuevaColumna == columnaActual &&((nuevaFila == filaActual+1)||(nuevaFila == filaActual-1))){
                 return true;
             }
-        }
         return false;
     } 
-     private void turnos(int fila, int columna, JButton button) {
-        if (turno == 1) {
-            if(botonSeleccionado==null){
-                if (botonSeleccionado != null && "J1".equals(botonSeleccionado.getJugador())) {
-                    if (esMovimientoValidoJugador1(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
-                        button.setBackground(Color.BLACK);
-                        turno = 2;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 1", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
-
-            } else {
-                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 1\nUsa piezas con cinta ROJA", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else if (turno == 2) {
-            if(botonSeleccionado==null){
-                if (botonSeleccionado != null && "J2".equals(botonSeleccionado.getJugador())) {
-                    if (esMovimientoValidoJugador2(fila, columna, piezaDestino.getFila(), piezaDestino.getColumna())) {
-                        button.setBackground(Color.BLACK);
-                        turno = 2;
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Movimiento inválido para el jugador 2", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
-
-            } else {
-                JOptionPane.showMessageDialog(null, "TURNO DE JUGADOR 2\nUsa piezas con cinta NEGRA", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            button.setBackground(Color.WHITE);
-        }
-     }
-
 
 /*
     private void siMuevePeroNoTraslada(int fila, int columna, JButton button) {
@@ -212,8 +198,6 @@ public class GhostGame {
     }
     //pendiente lo de fantasmas
     public void posicionarPiezasAleatorio() {
-        ArrayList<String> piezasJugadorUno = new ArrayList<>();
-        ArrayList<String> piezasJugadorDos = new ArrayList<>();
         for (int p = 0; p < dificultad; p++) {//cuantos en array, <2 es 4, <3 es 6 <4 es 8
             piezasJugadorUno.add("BUENOS");
             piezasJugadorUno.add("MALOS");
