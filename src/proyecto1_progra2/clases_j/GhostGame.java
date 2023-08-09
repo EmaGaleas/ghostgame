@@ -15,7 +15,7 @@ public class GhostGame {
     //atrubutos mover pieza
     private Pieza piezaDestino;
     private Pieza botonSeleccionado;//obtener datos
-    private int turno=1;//siempre inicia 1
+    private int turno;
     
     //atributos para inicializar tablero
     public Pieza[][] matrizBotones; //de JButton a Pieza por valores
@@ -24,8 +24,14 @@ public class GhostGame {
     int cantPiezas;//dependiente de dificultad 
     
     //atributos sobre piezas de jugador
-    private ArrayList<String> piezasJugadorUno = new ArrayList<>();
-    private ArrayList<String> piezasJugadorDos = new ArrayList<>();
+    private ArrayList<String> piezasJugadorUno;
+    private ArrayList<String> piezasJugadorDos;
+
+    public GhostGame() {
+        turno=1;
+        piezasJugadorUno = new ArrayList<>();
+        piezasJugadorDos = new ArrayList<>();
+    }
     
     public void GridLayout(JPanel tablero) {
         int filas = 6;
@@ -47,7 +53,7 @@ public class GhostGame {
                 button.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-   
+                        mostrarInformacionPieza(pieza);
 
                     }
                 });
@@ -56,29 +62,48 @@ public class GhostGame {
             }
         }
     }
-
-    public boolean datosIngresados(Pieza piezaSeleccionada) {
+    public void cambiarTurno() {
+      turno = (turno == 1) ? 2 : 1;
+    }
+    public int getTurnoActual() {
+        return turno;
+    }
+    public boolean datosIngresados(Pieza piezaSeleccionada) {//valida si puede continuar es decir, es respectivo con su turno **aplica al dar set
         if (piezaSeleccionada != null) {
             botonSeleccionado = piezaSeleccionada;
             if(botonSeleccionado.getJugador().equals("J1")&&turno==1){
                 return true;
-                //piezaSeleccionada.setBackground(Color.red);
-               // JOptionPane.showMessageDialog(null, "movimiento valido", "Info", JOptionPane.INFORMATION_MESSAGE);
-               // turno=2;
             }else if(botonSeleccionado.getJugador().equals("J1")&&turno==2){
-                JOptionPane.showMessageDialog(null, "no", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return false;
             }else if(botonSeleccionado.getJugador().equals("J2")&&turno==2){
-                piezaSeleccionada.setBackground(Color.red);
-                JOptionPane.showMessageDialog(null, "movimiento valido", "Info", JOptionPane.INFORMATION_MESSAGE);
-                turno=1;
+                return true;
             }else if(botonSeleccionado.getJugador().equals("J2")&&turno==1){
-                JOptionPane.showMessageDialog(null, "no", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return false;
             }else{
-                JOptionPane.showMessageDialog(null, "ERROR", "Info", JOptionPane.INFORMATION_MESSAGE);
+                return false;
             }
         }
-    return false;
+        return true;
+    }
+public boolean esMovimientoValidoJugador(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
+        if (matrizBotones[nuevaFila][nuevaColumna] == null) {
+        // Movimiento válido si el destino está vacío
+        System.out.println("Movimiento válido a casilla vacía");
+        return true;
+    }
+    if (nuevaFila == filaActual && ((nuevaColumna == columnaActual + 1) || (nuevaColumna == columnaActual - 1))) {
+        System.out.println("Movimiento válido hacia la izquierda o derecha");
+        return true;
+    } else if (nuevaColumna == columnaActual && ((nuevaFila == filaActual + 1) || (nuevaFila == filaActual - 1))) {
+        System.out.println("Movimiento válido hacia arriba o abajo");
+        return true;
+    } else {
+        System.out.println("Movimiento no válido");
+        return false;
+    }
 }
+
+
         //REVISAR OTRO TRUE
 //    private boolean noEsCastillo(int filaDestino, int columnaDestino) {
 //        if (piezaDestino != null) {
@@ -105,62 +130,6 @@ public class GhostGame {
 //
 //        return false;
 //    }
-    private boolean esMovimientoValidoJugador1(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-            if (nuevaFila == filaActual && ((nuevaColumna == columnaActual + 1) || (nuevaColumna == columnaActual - 1))) {
-                return true; // Movimiento hacia la izquierda o hacia la derecha
-            } else if (nuevaColumna == columnaActual && ((nuevaFila == filaActual + 1) || (nuevaFila == filaActual - 1))) {
-                return true; // Movimiento hacia arriba o hacia abajo
-            
-            }
-        return false; // Movimiento no válido
-    }
-    private boolean esMovimientoValidoJugador2(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
-            if (nuevaFila == filaActual &&((nuevaColumna == columnaActual+1)||(nuevaColumna == columnaActual-1))) {
-                return true;
-            } else if (nuevaColumna == columnaActual &&((nuevaFila == filaActual+1)||(nuevaFila == filaActual-1))){
-                return true;
-            }
-        return false;
-    } 
-
-/*
-    private void siMuevePeroNoTraslada(int fila, int columna, JButton button) {
-        mostrarInformacionPieza(matrizBotones[fila][columna]);
-        button.setBackground(Color.BLACK);
-        if (piezaMover == null) {
-            piezaMover = matrizBotones[fila][columna];
-            button.setBackground(Color.YELLOW);
-            button.setSelected(false);
-        }else if(button.equals(piezaMover)){
-                        button.setSelected(false);
-
-        }else {
-            if (matrizBotones[fila][columna] == null) {
-                button.setIcon(null);
-               int filaAnterior = piezaMover.getFila();
-                int columnaAnterior = piezaMover.getColumna();
-                matrizBotones[fila][columna] = piezaMover;
-                matrizBotones[filaAnterior][columnaAnterior] = null;
-
-                ImageIcon icon = new ImageIcon(piezaMover.getImagePath());
-                button.setIcon(icon);
-                piezaMover.setFila(fila);
-                piezaMover.setColumna(columna);
-                piezaMover=null;
-                button.setBackground(Color.BLACK);
-                button.setSelected(false);            
-                if (matrizBotones[filaAnterior][columnaAnterior]!=null) {
-                    matrizBotones[filaAnterior][columnaAnterior].setBackground(new Color(0xFFFFFF));
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "No se puede mover, casilla ocupada.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-            piezaMover.setBackground(Color.RED);
-            button.setSelected(false);
-
-        }
-    }
-*/ 
     public void modo(){
         switch(modo){
             case "ALEATORIO":
@@ -233,8 +202,18 @@ public class GhostGame {
                 contJugador2++;
             }
         }
+
+    // Asignar la instancia de pieza vacía a todas las posiciones restantes
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            if (matrizBotones[i][j] == null) {
+                Pieza piezaVacia = new Pieza("A", "A", "A", i, j);
+                matrizBotones[i][j] = piezaVacia;
+            }
+        }
     }
-    //informativos
+    }
+    //informativo al dar click en piezas
     private void mostrarInformacionPieza(Pieza pieza) {
         if (pieza!=null) {
             String info="Tipo "+pieza.getFantasma()+"\nJugador "+pieza.getJugador()+"\nF"+pieza.getFila()+"\nC"+pieza.getColumna();
@@ -254,4 +233,5 @@ public class GhostGame {
             JOptionPane.showMessageDialog(null,"MODO MANUAL\nTu decides el orden de tus piezas", "MODO", JOptionPane.NO_OPTION);
         }
     }
+
 } 

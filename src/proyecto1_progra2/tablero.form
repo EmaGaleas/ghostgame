@@ -80,7 +80,6 @@
                   <Component id="fantasmasMJ2" min="-2" pref="103" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
               </Group>
-              <Component id="jLabel8" alignment="0" max="32767" attributes="0"/>
               <Component id="turno" alignment="0" max="32767" attributes="0"/>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
@@ -155,11 +154,9 @@
                       <Component id="fantasmasBJ2" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                       <Component id="fantasmasMJ2" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabel8" min="-2" pref="45" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="turno" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="turno" min="-2" pref="45" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                   <Component id="jLabel9" min="-2" pref="45" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -326,7 +323,7 @@
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="jLabel8">
+        <Component class="javax.swing.JLabel" name="turno">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Doctor Soos Light" size="36" style="0"/>
@@ -336,19 +333,6 @@
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="TURNO DE:"/>
-            <Property name="horizontalTextPosition" type="int" value="0"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="turno">
-          <Properties>
-            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-              <Font name="Doctor Soos Light" size="36" style="0"/>
-            </Property>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="e0" green="c9" red="e6" type="rgb"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="..."/>
             <Property name="horizontalTextPosition" type="int" value="0"/>
           </Properties>
         </Component>

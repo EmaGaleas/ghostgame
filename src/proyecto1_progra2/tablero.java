@@ -4,6 +4,7 @@
  */
 package proyecto1_progra2;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import proyecto1_progra2.clases_j.*;
 
@@ -13,11 +14,13 @@ public class tablero extends javax.swing.JFrame {
 private GhostGame ghostGame;
     public tablero() {
         initComponents();
-         ghostGame = new GhostGame(); 
+        ghostGame = new GhostGame(); 
         ghostGame.GridLayout(tablero);
         filaDestino.setEnabled(false);
         columnaDestino.setEnabled(false);
         setDestino.setEnabled(false);
+        turno.setText("Turno de: " + ghostGame.getTurnoActual());
+
         //ghostGame.instrucciones();
         //ghostGame.posicionarPiezas();
     }
@@ -37,7 +40,6 @@ private GhostGame ghostGame;
         jLabel7 = new javax.swing.JLabel();
         fantasmasBJ2 = new javax.swing.JLabel();
         fantasmasMJ2 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         turno = new javax.swing.JLabel();
         retiro = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
@@ -140,16 +142,10 @@ private GhostGame ghostGame;
         fantasmasMJ2.setText("4");
         fantasmasMJ2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        jLabel8.setFont(new java.awt.Font("Doctor Soos Light", 0, 36)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setText("TURNO DE:");
-        jLabel8.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
         turno.setFont(new java.awt.Font("Doctor Soos Light", 0, 36)); // NOI18N
-        turno.setForeground(new java.awt.Color(230, 201, 224));
+        turno.setForeground(new java.awt.Color(255, 255, 255));
         turno.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        turno.setText("...");
+        turno.setText("TURNO DE:");
         turno.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
         retiro.setBackground(new java.awt.Color(102, 0, 102));
@@ -258,7 +254,6 @@ private GhostGame ghostGame;
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(fantasmasMJ2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(63, 63, 63))
-            .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(turno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, f1Layout.createSequentialGroup()
                 .addContainerGap()
@@ -323,22 +318,19 @@ private GhostGame ghostGame;
                 .addGroup(f1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(fantasmasBJ2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(fantasmasMJ2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(turno)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
+                .addComponent(turno, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(f1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(getMover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(f1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                        .addGroup(f1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(filaSeleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(columnaSeleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addGroup(f1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(filaSeleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(columnaSeleccion, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -587,51 +579,109 @@ private GhostGame ghostGame;
     }//GEN-LAST:event_infoMouseClicked
 
     private void getMoverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_getMoverMouseClicked
+    String fSeleccion = filaSeleccion.getText().trim();
+    String cSeleccion = columnaSeleccion.getText().trim();
+    if (fSeleccion.isEmpty() || cSeleccion.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Llene las casillas", "Error", JOptionPane.WARNING_MESSAGE);
+    } else {
+        try {
+            int filaSele = Integer.parseInt(fSeleccion);
+            int cSele = Integer.parseInt(cSeleccion);
+            if ((filaSele < 0 || filaSele >= 6) || (cSele < 0 || cSele >= 6)) {
+                JOptionPane.showMessageDialog(null, "Ingrese cordenadas dentro del rango 0-5", "Error en SELECCION", JOptionPane.WARNING_MESSAGE);
+            } else {
 
-        
-        String fSeleccion= filaSeleccion.getText().trim();
-      String cSeleccion= columnaSeleccion.getText().trim();
-      if (fSeleccion.isEmpty()||cSeleccion.isEmpty()){
-          JOptionPane.showMessageDialog(null, "Llene las casillas", "Error", JOptionPane.WARNING_MESSAGE);
-      }else{
-          try{
-              int filaSele=Integer.parseInt(fSeleccion);
-              int cSele=Integer.parseInt(cSeleccion);
-              if((filaSele<0 || filaSele>=6) || (cSele<0 || cSele>=6)){
-                 JOptionPane.showMessageDialog(null, "Ingrese cordenadas dentro del rango 0-5", "Error en SELECCION", JOptionPane.WARNING_MESSAGE);
-              }else{
+            Pieza piezaSeleccionada = ghostGame.matrizBotones[filaSele][cSele];
+            if (ghostGame.datosIngresados(piezaSeleccionada)) {
                 filaDestino.setEnabled(true);
                 columnaDestino.setEnabled(true);
                 setDestino.setEnabled(true);
-              }
+                JOptionPane.showMessageDialog(null, "Puede seguir", "Movimiento válido", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, "Escoja una pieza válida para mover", "Movimiento no válido", JOptionPane.WARNING_MESSAGE);
+            }
+            }
 
-          }catch(Exception e){
-             JOptionPane.showMessageDialog(null, "INGRESE NUMEROS", "Error en SELECCION", JOptionPane.ERROR_MESSAGE);
-          }
-      }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "INGRESE NUMEROS", "Error en SELECCION", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     }//GEN-LAST:event_getMoverMouseClicked
-
+        private void actualizarTablero() {
+    for (int i = 0; i < 6; i++) {
+        for (int j = 0; j < 6; j++) {
+            Pieza pieza = ghostGame.matrizBotones[i][j];
+            if (pieza != null && pieza.getFantasma() != null && pieza.getImagePath() != null) {
+                ImageIcon icon = new ImageIcon(pieza.getImagePath());
+                pieza.setIcon(icon);
+            } else {
+                pieza.setIcon(null);
+            }
+        }
+    }
+}
     private void setDestinoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_setDestinoMouseClicked
-      String fDestino= filaDestino.getText().trim();
-      String cDestino= columnaDestino.getText().trim();
-      if (fDestino.isEmpty()||cDestino.isEmpty()){
-          JOptionPane.showMessageDialog(null, "Llene las casillas", "Error", JOptionPane.WARNING_MESSAGE);
-      }else{
-          try{
-              int filaDestiny=Integer.parseInt(fDestino);
-              int cDestiny=Integer.parseInt(cDestino);
-              if((filaDestiny<0 || filaDestiny>=6) || (cDestiny<0 || cDestiny>=6)){
-                 JOptionPane.showMessageDialog(null, "Ingrese cordenadas dentro del rango 0-5", "Error en DESTINO", JOptionPane.WARNING_MESSAGE);
-              }else{
-                filaDestino.setEnabled(false);
-                columnaDestino.setEnabled(false);
-                setDestino.setEnabled(false);
-              }
+        String fSeleccion = filaSeleccion.getText().trim();
+        String cSeleccion = columnaSeleccion.getText().trim();
+        String fDestino = filaDestino.getText().trim();
+        String cDestino = columnaDestino.getText().trim();
 
-          }catch(Exception e){
-             JOptionPane.showMessageDialog(null, "INGRESE NUMEROS", "Error en DESTINO", JOptionPane.ERROR_MESSAGE);
-          }
-      }
+        if (fDestino.isEmpty() || cDestino.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Llene las casillas de destino", "Error", JOptionPane.WARNING_MESSAGE);
+        } else {
+            try {
+                int filaSel = Integer.parseInt(fSeleccion);
+                int columnaSel = Integer.parseInt(cSeleccion);
+                int filaDest = Integer.parseInt(fDestino);
+                int columnaDest = Integer.parseInt(cDestino);
+
+                if ((filaDest < 0 || filaDest >= 6) || (columnaDest < 0 || columnaDest >= 6)) {
+                    JOptionPane.showMessageDialog(null, "Ingrese coordenadas dentro del rango 0-5", "Error en DESTINO", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    Pieza piezaSeleccionada = ghostGame.matrizBotones[filaSel][columnaSel];
+                    Pieza piezaDestino = ghostGame.matrizBotones[filaDest][columnaDest];
+                    System.out.println("filaSel: " + filaSel);
+            System.out.println("columnaSel: " + columnaSel);
+            System.out.println("filaDest: " + filaDest);
+            System.out.println("columnaDest: " + columnaDest);
+
+                    if (ghostGame.datosIngresados(piezaSeleccionada) && ghostGame.esMovimientoValidoJugador(filaDest, columnaDest, filaSel, columnaSel)) {
+                        // Move the piece
+                        piezaDestino.setFantasma(piezaSeleccionada.getFantasma());
+                        piezaDestino.setImagePath(piezaSeleccionada.getImagePath());
+                        piezaDestino.setJugador(piezaSeleccionada.getJugador());
+                        piezaDestino.setFila(filaDest);
+                        piezaDestino.setColumna(columnaDest);
+
+                        piezaSeleccionada.setFantasma(piezaDestino.getFantasma());
+                        piezaSeleccionada.setImagePath(piezaDestino.getImagePath());
+                        piezaSeleccionada.setJugador(piezaDestino.getJugador());
+                        piezaSeleccionada.setFila(filaSel);
+                        piezaSeleccionada.setColumna(columnaSel);
+
+                        // Update UI
+                        actualizarTablero();
+
+                        ghostGame.cambiarTurno();
+                        turno.setText("Turno de: " + ghostGame.getTurnoActual());
+                        filaSeleccion.setText("");
+                        columnaSeleccion.setText("");
+                        filaDestino.setText("");
+                        columnaDestino.setText("");
+                        filaDestino.setEnabled(false);
+                        columnaDestino.setEnabled(false);
+                        setDestino.setEnabled(false);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Movimiento no válido", "Error", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Ingrese números válidos", "Error en DESTINO", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    
     }//GEN-LAST:event_setDestinoMouseClicked
 
     /**
@@ -710,7 +760,6 @@ private GhostGame ghostGame;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton retiro;
