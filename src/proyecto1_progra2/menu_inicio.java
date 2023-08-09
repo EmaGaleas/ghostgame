@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package proyecto1_progra2;
+import javax.swing.ImageIcon;
 
 
 public class menu_inicio extends javax.swing.JFrame {
@@ -12,6 +13,8 @@ public class menu_inicio extends javax.swing.JFrame {
     public menu_inicio() {
         this.username=username;
         initComponents();
+        ImageIcon fondoIcon = new ImageIcon(getClass().getResource("/imagenes/fondo/f_inicio.png"));
+        fondo_inicio.setIcon(fondoIcon);
     }
 
 
