@@ -641,7 +641,7 @@ private GhostGame ghostGame;
                 } else {
                     Pieza piezaSeleccionada = ghostGame.matrizBotones[filaSel][columnaSel];
                     Pieza piezaDestino = ghostGame.matrizBotones[filaDest][columnaDest];
-                    System.out.println("filaSel: " + filaSel);
+            System.out.println("filaSel: " + filaSel);
             System.out.println("columnaSel: " + columnaSel);
             System.out.println("filaDest: " + filaDest);
             System.out.println("columnaDest: " + columnaDest);
@@ -654,9 +654,9 @@ private GhostGame ghostGame;
                         piezaDestino.setFila(filaDest);
                         piezaDestino.setColumna(columnaDest);
 
-                        piezaSeleccionada.setFantasma(piezaDestino.getFantasma());
-                        piezaSeleccionada.setImagePath(piezaDestino.getImagePath());
-                        piezaSeleccionada.setJugador(piezaDestino.getJugador());
+                        piezaSeleccionada.setFantasma("A");
+                        piezaSeleccionada.setImagePath("A");
+                        piezaSeleccionada.setJugador("A");
                         piezaSeleccionada.setFila(filaSel);
                         piezaSeleccionada.setColumna(columnaSel);
 

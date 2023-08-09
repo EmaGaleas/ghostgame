@@ -87,7 +87,6 @@ public class GhostGame {
     }
 public boolean esMovimientoValidoJugador(int nuevaFila, int nuevaColumna, int filaActual, int columnaActual) {
         if (matrizBotones[nuevaFila][nuevaColumna] == null) {
-        // Movimiento válido si el destino está vacío
         System.out.println("Movimiento válido a casilla vacía");
         return true;
     }
